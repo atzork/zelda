@@ -2,11 +2,12 @@ import pygame
 from pygame.sprite import Group
 
 from debug import debug
+from entity import Entity
 from settings import weapon_data, magic_data
 from support import import_folder
 
 
-class Player(pygame.sprite.Sprite):
+class Player(Entity):
     def __init__(self, pos, groups: Group, obstacle_sprites: Group, create_attack, destroy_attack, create_magic):
         super().__init__(groups)
         self.image = pygame.image.load('images/player.png').convert_alpha()
@@ -17,11 +18,6 @@ class Player(pygame.sprite.Sprite):
         self.animations = None
         self.import_player_assets()
         self.status = 'down'
-        self.frame_index = 0
-        self.animation_speed = 0.15
-
-        # movement
-        self.direction = pygame.math.Vector2()
 
         # attack
         self.attacking = False
@@ -142,35 +138,6 @@ class Player(pygame.sprite.Sprite):
         else:
             if 'attack' in self.status:
                 self.status = self.status.replace('_attack', '')
-
-    def move(self, speed):
-        if self.direction.magnitude() != 0:
-            self.direction = self.direction.normalize()
-
-        self.hitbox.x += self.direction.x * speed
-        self.collision('horizontal')
-
-        self.hitbox.y += self.direction.y * speed
-        self.collision('vertical')
-
-        self.rect.center = self.hitbox.center
-
-    def collision(self, direction):
-        if direction == 'horizontal':
-            for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect(self.hitbox):
-                    if self.direction.x > 0:  # moving right
-                        self.hitbox.right = sprite.hitbox.left
-                    if self.direction.x < 0:  # moving left
-                        self.hitbox.left = sprite.hitbox.right
-
-        if direction == 'vertical':
-            for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect(self.hitbox):
-                    if self.direction.y > 0:  # moving up
-                        self.hitbox.bottom = sprite.hitbox.top
-                    if self.direction.y < 0:  # moving down
-                        self.hitbox.top = sprite.hitbox.bottom
 
     def cooldowns(self):
         current_time = pygame.time.get_ticks()
