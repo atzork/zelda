@@ -55,6 +55,10 @@ class AnimationPlayer:
             new_frames.append(flip_frame)
         return new_frames
 
+    def create_particles(self, animation_type, pos, groups: Group):
+        animation_frames = self.frames[animation_type]
+        ParticleEffect(pos, animation_frames, groups)
+
 
 class ParticleEffect(pygame.sprite.Sprite):
     def __init__(self, pos, animation_frames, groups: Group):
