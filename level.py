@@ -4,6 +4,7 @@ import pygame
 from random import choice
 
 from enemy import Enemy
+from magic import MagicPlayer
 from particle import AnimationPlayer
 from settings import *
 from support import import_csv_layout, import_folder
@@ -39,6 +40,7 @@ class Level:
 
         # particles
         self.animation_player = AnimationPlayer()
+        self.magic_player = MagicPlayer(self.animation_player)
 
     def create_map(self):
         layouts = {
@@ -106,7 +108,11 @@ class Level:
         self.current_attack = Weapon(self.player, [self.visible_sprites, self.attack_sprites])
 
     def create_magic(self, style, strength, cost):
-        print(style, strength, cost)
+        if style == 'heal':
+            self.magic_player.heal(self.player, strength, cost, self.visible_sprites)
+
+        if style == 'flame':
+            self.magic_player.flame(self.player, cost, [self.visible_sprites, self.attack_sprites])
 
     def destroy_attack(self):
         if self.current_attack:
