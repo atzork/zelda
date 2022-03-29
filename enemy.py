@@ -8,7 +8,9 @@ from support import import_folder
 
 
 class Enemy(Entity):
-    def __init__(self, monster_name, pos, groups: Group, obstacle_sprites, damage_player, trigger_death_particles):
+    def __init__(self,
+                 monster_name, pos, groups: Group, obstacle_sprites, damage_player,
+                 trigger_death_particles, add_xp):
         # general setup
         super(Enemy, self).__init__(groups)
         self.animations = None
@@ -42,6 +44,7 @@ class Enemy(Entity):
         self.attack_cooldown = 400
         self.damage_player = damage_player
         self.trigger_death_particles = trigger_death_particles
+        self.add_exp = add_xp
 
         # invincibility timer
         self.vulnerable = True
@@ -124,8 +127,9 @@ class Enemy(Entity):
 
     def check_death(self):
         if self.health <= 0:
-            self.trigger_death_particles(self.rect.center, self.monster_name)
             self.kill()
+            self.trigger_death_particles(self.rect.center, self.monster_name)
+            self.add_exp(self.exp)
 
     def hit_reaction(self):
         if not self.vulnerable:
