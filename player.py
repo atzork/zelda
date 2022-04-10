@@ -1,9 +1,8 @@
 import pygame
 from pygame.sprite import Group
 
-from debug import debug
 from entity import Entity
-from settings import weapon_data, magic_data
+from settings import weapon_data, magic_data, HITBOX_OFFSETS
 from support import import_folder
 
 
@@ -12,7 +11,7 @@ class Player(Entity):
         super().__init__(groups)
         self.image = pygame.image.load('images/player.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
-        self.hitbox = self.rect.inflate(0, -26)
+        self.hitbox = self.rect.inflate(-6, HITBOX_OFFSETS['player'])
 
         # graphics setup
         self.animations = None
